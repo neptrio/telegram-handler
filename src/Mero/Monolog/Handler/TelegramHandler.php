@@ -28,8 +28,8 @@ class TelegramHandler extends AbstractProcessingHandler
     private $chatId;
     
     /**
-    *
-    */ @var string Proxy Address
+    * @var string Proxy Address
+    */ 
     private $proxy;
 
     /**
