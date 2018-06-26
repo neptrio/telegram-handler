@@ -26,11 +26,17 @@ class TelegramHandler extends AbstractProcessingHandler
      * @var int Chat identifier
      */
     private $chatId;
+    
+    /**
+    *
+    */ @var string Proxy Address
+    private $proxy;
 
     /**
      * @param string $token  Telegram API token
      * @param int    $chatId Chat identifier
      * @param int    $level  The minimum logging level at which this handler will be triggered
+     * @param string $proxy  Proxy Address
      * @param bool   $bubble Whether the messages that are handled can bubble up the stack or not
      *
      * @throws MissingExtensionException If the PHP cURL extension is not loaded
@@ -39,6 +45,7 @@ class TelegramHandler extends AbstractProcessingHandler
         $token,
         $chatId,
         $level = Logger::CRITICAL,
+        $proxy = NULL,
         $bubble = true
     ) {
         if (!extension_loaded('curl')) {
@@ -47,6 +54,7 @@ class TelegramHandler extends AbstractProcessingHandler
 
         $this->token = $token;
         $this->chatId = $chatId;
+        $this->proxy = $proxy;
 
         parent::__construct($level, $bubble);
     }
@@ -99,6 +107,7 @@ class TelegramHandler extends AbstractProcessingHandler
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->buildHeader($content));
+        curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
         curl_setopt($ch, CURLOPT_URL, sprintf('https://api.telegram.org/bot%s/sendMessage', $this->token));
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
